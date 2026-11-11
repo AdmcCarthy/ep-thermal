@@ -1,4 +1,4 @@
-# Formation temperature from bottom-hole temperatures (src/processing/temperature.py, docs/temperature.md).
+# Formation temperature from bottom-hole temperatures.
 # A temperature measured while or soon after drilling is LOWER than the undisturbed formation temperature (the circulating mud cools the hole bottom, the
 # formation has not recovered): a bottom-hole temperature (BHT) is a MINIMUM of the formation temperature until it is corrected.  Everything here is
 # configuration; values marked ASSUMPTION are screening choices, not data.  Official values (a DST gauge temperature) are never replaced by an estimate.
@@ -12,7 +12,7 @@
 # The Harrison et al. (1983) depth polynomial was tested and REJECTED: against 195 wells with a header BHT and a DST temperature the temperature predicted from the
 # UNCORRECTED header BHT line differs from the DST temperature by +1.4 degC (median; -0.2 degC for the 129 wells whose test is within 15 % of the total depth; interquartile
 # range about -4 to +6 degC), while the Harrison-corrected line lies 12 degC (17 degC near the total depth) ABOVE it.  The Sodir header BHT is already close to the formation
-# temperature (it may be reported corrected, or measured late): whether it is raw or corrected is a provenance question for Adam (DQ-089).
+# temperature (it may be reported corrected, or measured late): whether it is raw or corrected is a provenance question for the maintainer.
 preference: [horner_readings, dst_gauge, bht_uncorrected]
 confidence:
   horner_readings: high
@@ -56,6 +56,6 @@ gradient:
   # Wells with both a corrected BHT and a DST temperature are compared (`dst_minus_bht_corrected_c`): the running check of the correction.
 
 # The estimate at the depth of a test (T_seabed + G * depth below seabed) is a screening value for tests with no gauge temperature.  It is kept in its own columns
-# (`temperature_est_c`, with its basis) and, from 2026-11-03 (Adam), FEEDS THE PVT ENVELOPE and the temperature bracket of `well_dst_pvt` (`temperature_used_c`; such tests
+# (`temperature_est_c`, with its basis) and, from 2026-11-03 (the maintainer), FEEDS THE PVT ENVELOPE and the temperature bracket of `well_dst_pvt` (`temperature_used_c`; such tests
 # are drawn as hollow markers); the HPHT class of `well_dst_pressure` stays on gauge temperatures.  Switch to false to use gauge temperatures only.
 use_estimate_in_classification: true

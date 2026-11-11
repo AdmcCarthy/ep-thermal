@@ -13,7 +13,7 @@ stated seabed temperature) replaces a worse one with no code change; `add_temper
 
 Rules (AGENTS.md sections 6, 16, 19)
     * Official gauge temperatures (DST) are never replaced; an estimate is labelled with its basis and confidence, and is NOT used for the HPHT class or the PVT
-      envelopes unless `use_estimate_in_classification` is switched on (a decision for Adam).
+      envelopes unless `use_estimate_in_classification` is switched on (a decision for the maintainer).
     * Depth below seabed = depth below RT - RT elevation - water depth; TVD where the well has it, else MD (a proxy: depth is then overestimated and the gradient
       underestimated, flagged `md_proxy_for_tvd`).  The BHT is ASSUMED to be measured at the total depth of the well.
     * Nothing is fabricated: no temperature stays missing.  Pure functions: DataFrames in, DataFrames out, plus data-quality events.
