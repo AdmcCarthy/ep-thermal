@@ -1,0 +1,61 @@
+# Formation temperature from bottom-hole temperatures (src/processing/temperature.py, docs/temperature.md).
+# A temperature measured while or soon after drilling is LOWER than the undisturbed formation temperature (the circulating mud cools the hole bottom, the
+# formation has not recovered): a bottom-hole temperature (BHT) is a MINIMUM of the formation temperature until it is corrected.  Everything here is
+# configuration; values marked ASSUMPTION are screening choices, not data.  Official values (a DST gauge temperature) are never replaced by an estimate.
+
+# Order of preference of the temperature a well gets (the first that exists wins; each result carries its basis, confidence and uncertainty):
+#   horner_readings   two or more BHT readings at one depth with different times since circulation stopped (manual sheet `bht_readings`): Horner extrapolation
+#   dst_gauge         a DST gauge temperature (official): measured over a long flow / shut-in, close to the formation temperature
+#   bht_uncorrected   the header BHT as it is
+# METHODS (docs/temperature.md): Horner is implemented and waits for readings.  Waples and Ramly (2001) / Waples, Pedersen and Kuijpers (2004, Danish North Sea) need the
+# time since circulation and their published coefficients; Hermanrud, Cao and Lerche (1990) / Cao et al. (1988) invert a temperature time series: both wait for data.
+# The Harrison et al. (1983) depth polynomial was tested and REJECTED: against 195 wells with a header BHT and a DST temperature the temperature predicted from the
+# UNCORRECTED header BHT line differs from the DST temperature by +1.4 degC (median; -0.2 degC for the 129 wells whose test is within 15 % of the total depth; interquartile
+# range about -4 to +6 degC), while the Harrison-corrected line lies 12 degC (17 degC near the total depth) ABOVE it.  The Sodir header BHT is already close to the formation
+# temperature (it may be reported corrected, or measured late): whether it is raw or corrected is a provenance question for Adam (DQ-089).
+preference: [horner_readings, dst_gauge, bht_uncorrected]
+confidence:
+  horner_readings: high
+  dst_gauge: medium
+  bht_uncorrected: medium                  # agrees with the DST temperature (above)
+uncertainty_c:                             # one standard deviation, degC
+  horner_readings: 8.0                     # Hermanrud et al. (1990): Horner-corrected BHT against DST, about +-8 degC (second-hand figure, to verify)
+  dst_gauge: 5.0                           # ASSUMPTION
+  bht_uncorrected: 8.0                     # the spread against the DST temperature found here (interquartile -4 to +6); the literature gives +-20 degC for a raw single BHT
+
+# Treat an uncorrected header BHT as a MINIMUM of the formation temperature (flag `temperature_is_minimum`)?  Not by default: it agrees with the DST temperature (evidence above).
+bht_is_minimum: false
+
+# Seabed (sea floor) temperature [degC] by water depth: the top of the geothermal profile T(z) = T_seabed + G * (depth below seabed).
+# ASSUMPTION: typical bottom-water temperatures (North Sea shelf 5-8 degC, Norwegian Sea below about 500 m close to 0 degC, Barents Sea 1-4 degC).  Replaced per
+# well by a measured value from the manual sheet `seabed_temperature` (a temperature log, a seabed survey or the final well report).
+seabed:
+  default_c: 4.0                           # the value pressure.yaml uses for the geothermal gradient of a test; used when the water depth is missing
+  by_water_depth_m:                        # upper bound (first match), temperature
+    - {below: 150.0,  temperature_c: 6.0}
+    - {below: 400.0,  temperature_c: 5.0}
+    - {below: 800.0,  temperature_c: 2.5}
+    - {below: 1500.0, temperature_c: 0.0}
+    - {below: 10000.0, temperature_c: -0.5}
+  area_adjust_c:                           # added to the water-depth value (Sodir main_area, upper case)
+    BARENTS SEA: -1.0
+
+# Horner extrapolation: T_bh(dt) = T_f - m * ln((tc + dt) / dt), tc = circulation time, dt = time since circulation stopped; the intercept at ln(...) = 0
+# (dt -> infinity) is the static formation temperature T_f.  Needs two or more readings at ONE depth with different dt (successive logging runs).
+horner:
+  default_circulation_h: 2.0               # ASSUMPTION when tc is not stated: about 2 hours (the effect on the result is small for dt > 6 h)
+  min_readings: 2
+  min_time_spread_ratio: 1.5               # the longest dt must be at least this multiple of the shortest, else the line is not determined
+  max_correction_c: 60.0                   # a Horner extrapolation above BHT + this is rejected (noise: the readings are too close in time)
+  # Horner values run about 1-2 degC low against the exact line-source solution (literature); not corrected here.
+
+# A geothermal gradient outside this window is flagged (the data point, the depth or the seabed temperature is probably wrong).
+gradient:
+  plausible_c_per_km: [15.0, 70.0]
+  min_depth_below_seabed_m: 500.0          # a gradient from a shallower point is dominated by the seabed temperature: not computed
+  # Wells with both a corrected BHT and a DST temperature are compared (`dst_minus_bht_corrected_c`): the running check of the correction.
+
+# The estimate at the depth of a test (T_seabed + G * depth below seabed) is a screening value for tests with no gauge temperature.  It is kept in its own columns
+# (`temperature_est_c`, with its basis) and, from 2026-11-03 (Adam), FEEDS THE PVT ENVELOPE and the temperature bracket of `well_dst_pvt` (`temperature_used_c`; such tests
+# are drawn as hollow markers); the HPHT class of `well_dst_pressure` stays on gauge temperatures.  Switch to false to use gauge temperatures only.
+use_estimate_in_classification: true
