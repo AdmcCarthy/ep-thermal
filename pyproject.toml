@@ -1,6 +1,6 @@
 [project]
 name = "ep-thermal"
-version = "0.1.0"
+version = "1.0.0"
 description = "Formation temperature: Horner extrapolation, gradients and the seabed temperature."
 readme = "README.md"
 license = { file = "LICENSE" }
