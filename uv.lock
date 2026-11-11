@@ -22,7 +22,7 @@ wheels = [
 [[package]]
 name = "ep-physics-base"
 version = "0.1.0"
-source = { git = "https://github.com/AdmcCarthy/ep-physics-base?tag=v0.1.0#9e73e8becb2fe7ab1bcce76bcb18b3187c8d6531" }
+source = { git = "https://github.com/AdmcCarthy/ep-physics-base?tag=v0.1.0#6cd2fb78ca3a48d591d266f6f61bde5764679683" }
 dependencies = [
     { name = "numpy" },
     { name = "pandas" },

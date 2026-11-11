@@ -5,7 +5,7 @@ from pathlib import Path
 
 PACKAGE = Path(__file__).resolve().parents[1] / "src" / "ep_thermal"
 ALLOWED_LIBRARIES = ['ep_physics_base', 'ep_thermal']
-FORBIDDEN = {"src", "knowledge", "ep_knowledge"}
+FORBIDDEN = {'ep_knowledge', 'knowledge', 'src'}
 
 
 def imports(path: Path) -> set[str]:
