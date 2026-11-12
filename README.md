@@ -36,3 +36,9 @@ uv run python scripts/publication_gate.py
 ```
 
 Tests use small synthetic data generated on the fly. No network, no real data.
+
+## Licence and acknowledgement
+
+MIT License with Acknowledgement ([LICENSE](LICENSE)): the MIT terms plus one condition. Anything built with this work says so,
+visibly and in plain words, and does not imply endorsement: "Built with ep-thermal by Adam McCarthy (https://github.com/AdmcCarthy/ep-thermal)". The wording is custom, so
+the licence is not OSI-approved. The library holds no third-party data; cited literature and vendored code keep their own terms.
