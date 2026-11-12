@@ -113,4 +113,23 @@ def test_temperature_estimates_use_the_well_gradient_then_the_area_gradient_and_
     assert out.loc[2, "temperature_est_basis"] == "area_median_gradient"                          # well 4 has no temperature: the median gradient of its area
     assert out["temperature_est_c"].notna().all()
 
+def _f_to_c(f):
+    return (np.asarray(f, dtype=float) - 32.0) * 5.0 / 9.0
 
+
+def _c_to_f(c):
+    return float(c) * 9.0 / 5.0 + 32.0
+
+
+def test_the_published_horner_example_is_reproduced_within_the_hand_drawn_line():
+    """Allen and Allen (2005), p. 378, Fig. 9.19 (after Dowdle and Cobb 1975): 16,200 ft, 3.5 h of circulation, runs at 8.25, 11 and 13.5 h read 241, 257 and 262 F; the printed formation temperature is 297 F.
+
+    The printed value comes from a hand-drawn line.  A least-squares fit to the tabulated runs gives 303 F; the middle run is tabulated as 257 F but drawn near 252 F, and with 252 F the fit gives 300 F.
+    The test pins what the function does (303 F and 300 F, within 1 F) and that it stays within 8 F of the printed value; it does not pretend the book's number is reproduced exactly.
+    """
+    dt = [8.25, 11.0, 13.5]
+    tabulated = tp.horner_static_temperature(dt, _f_to_c([241, 257, 262]), 3.5, CFG)
+    drawn = tp.horner_static_temperature(dt, _f_to_c([241, 252, 262]), 3.5, CFG)
+    assert tabulated["status"] == "ok" and drawn["status"] == "ok"
+    assert abs(_c_to_f(tabulated["static_temperature_c"]) - 303.0) < 1.0 and abs(_c_to_f(drawn["static_temperature_c"]) - 300.0) < 1.0
+    assert abs(_c_to_f(tabulated["static_temperature_c"]) - 297.0) < 8.0 and abs(_c_to_f(drawn["static_temperature_c"]) - 297.0) < 8.0
