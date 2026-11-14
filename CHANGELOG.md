@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- `conductivity`: geometric-mean thermal conductivity from components, the sandstone helper of the book's plot, and rock-type ranges.
+- `quartz_cement`: the Walderhaug rate law over a history, with a low, central and high band for the rate constant b.
+- `maturity`: EASY%Ro vitrinite reflectance from a history. A step with no temperature change is treated as isothermal (see `docs/conductivity_cement_maturity.md`).
+- Three packaged default files, graded in `KNOWLEDGE.md`: level published, assumed valid for use and to be verified when more data are available.
+
 ## 1.0.0 (2026-11-11)
 
 First public release.

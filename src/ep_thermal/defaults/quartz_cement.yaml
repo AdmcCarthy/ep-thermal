@@ -1,0 +1,19 @@
+# Quartz cementation as a function of temperature and time (the rate law of the Exemplar-type model).
+# Source: Walderhaug (1996, AAPG Bulletin 80, pp. 731-745, equations 1-9) for the form; the rate constants are from Walderhaug (1994a, not read) as quoted there;
+# Walderhaug (2000, AAPG Bulletin 84, pp. 1325-1339) for the spread of b. Level: published, assumed valid for use (owner decision of 2026-11-14), to be verified
+# against core cement and a temperature history of known uncertainty.
+# The rate is r = a x 10^(b T) in mol per cm2 per second with T in degrees C; cement starts at 80 degrees C.
+
+rate:
+  a_mol_cm2_s: 1.98e-22
+  b_per_degc:
+    central: 0.0205           # middle of the cluster 0.020 to 0.021 over 19 Norwegian shelf wells (Walderhaug 2000)
+    low: 0.018                # lowest best fit in those wells
+    high: 0.023               # highest best fit; Walderhaug 1996 itself uses 0.022
+  # b is NOT a single number: the spread comes mostly from uncertain temperature histories (a history too cold needs a higher b to match the cement) and from the
+  # initial surface-area function. Report a band from low to high, not one curve.
+  start_temperature_c: 80.0   # very little quartz cement below this in sandstone that has not been uplifted
+
+constants:
+  quartz_molar_mass_g_mol: 60.09
+  quartz_density_g_cm3: 2.65

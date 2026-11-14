@@ -19,6 +19,9 @@ none
 | Module | What it does |
 | :--- | :--- |
 | `temperature` | Formation temperature from bottom-hole temperatures: seabed temperature, depth below seabed, Harrison and Horner corrections, geothermal gradients. |
+| `conductivity` | Thermal conductivity of a rock from its components: a geometric mean by volume fraction, with the component values and rock ranges of Allen and Allen (2005). |
+| `quartz_cement` | Quartz cement from a temperature history: the rate law of Walderhaug (1996), reported as a band in the rate constant b. |
+| `maturity` | Vitrinite reflectance from a temperature history: the EASY%Ro kinetics of Sweeney and Burnham (1990). |
 
 Functions are pure: they take frames and parameters and return `(result, events)` where they change or flag data; nothing reads or writes files except the configuration loader.
 
@@ -30,7 +33,7 @@ Every setting has a packaged default in `src/ep_thermal/defaults/`. A project ca
 
 ```
 uv sync --all-extras
-uv run pytest            # 1 test files
+uv run pytest            # 6 test files
 uv run ruff check .
 uv run python scripts/publication_gate.py
 ```
